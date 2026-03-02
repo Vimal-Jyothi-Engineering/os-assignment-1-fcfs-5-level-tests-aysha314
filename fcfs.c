@@ -19,7 +19,7 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // Sort by arrival time (Bubble Sort)
+    // Sort by arrival time (Stable Bubble Sort)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (p[j].arrival > p[j + 1].arrival) {
@@ -39,32 +39,34 @@ int main() {
             current_time = p[i].arrival;
         }
 
-        p[i].turnaround = (current_time + p[i].burst) - p[i].arrival;
+        int completion = current_time + p[i].burst;
+
+        p[i].turnaround = completion - p[i].arrival;
         p[i].waiting = p[i].turnaround - p[i].burst;
 
-        current_time += p[i].burst;
+        current_time = completion;
 
         total_wt += p[i].waiting;
         total_tat += p[i].turnaround;
     }
 
     // Print Waiting Time
-    printf("Waiting Time: ");
+    printf("Waiting Time:");
     for (int i = 0; i < n; i++) {
-        printf("%s %d ", p[i].pid, p[i].waiting);
+        printf(" %s %d", p[i].pid, p[i].waiting);
     }
     printf("\n");
 
     // Print Turnaround Time
-    printf("Turnaround Time: ");
+    printf("Turnaround Time:");
     for (int i = 0; i < n; i++) {
-        printf("%s %d ", p[i].pid, p[i].turnaround);
+        printf(" %s %d", p[i].pid, p[i].turnaround);
     }
     printf("\n");
 
-    // Print Averages (2 decimal places)
+    // Print Averages
     printf("Average Waiting Time: %.2f\n", total_wt / n);
-    printf("Average Turnaround Time: %.2f\n", total_tat / n);
+    printf("Average Turnaround Time: %.2f", total_tat / n);
 
     return 0;
 }
