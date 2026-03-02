@@ -19,9 +19,52 @@ int main() {
         scanf("%s %d %d", p[i].pid, &p[i].arrival, &p[i].burst);
     }
 
-    // TODO: Sort by arrival time
-    // TODO: Compute waiting & turnaround time
-    // TODO: Print EXACTLY in required format
+    // Sort by arrival time (Bubble Sort)
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (p[j].arrival > p[j + 1].arrival) {
+                Process temp = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = temp;
+            }
+        }
+    }
+
+    int current_time = 0;
+    float total_wt = 0, total_tat = 0;
+
+    for (int i = 0; i < n; i++) {
+
+        if (current_time < p[i].arrival) {
+            current_time = p[i].arrival;
+        }
+
+        p[i].turnaround = (current_time + p[i].burst) - p[i].arrival;
+        p[i].waiting = p[i].turnaround - p[i].burst;
+
+        current_time += p[i].burst;
+
+        total_wt += p[i].waiting;
+        total_tat += p[i].turnaround;
+    }
+
+    // Print Waiting Time
+    printf("Waiting Time: ");
+    for (int i = 0; i < n; i++) {
+        printf("%s %d ", p[i].pid, p[i].waiting);
+    }
+    printf("\n");
+
+    // Print Turnaround Time
+    printf("Turnaround Time: ");
+    for (int i = 0; i < n; i++) {
+        printf("%s %d ", p[i].pid, p[i].turnaround);
+    }
+    printf("\n");
+
+    // Print Averages (2 decimal places)
+    printf("Average Waiting Time: %.2f\n", total_wt / n);
+    printf("Average Turnaround Time: %.2f\n", total_tat / n);
 
     return 0;
 }
